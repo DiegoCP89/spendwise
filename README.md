@@ -1,4 +1,4 @@
-# SpendWise — Personal Expense Tracker 
+# SpendWise — Personal Expense Tracker
 
 A full-stack personal expense tracker — React frontend, FastAPI REST API, and PostgreSQL database.
 
@@ -6,20 +6,20 @@ A full-stack personal expense tracker — React frontend, FastAPI REST API, and 
 
 ## 🧭 Overview
 
-SpendWise is a personal finance web application that allows users to record, 
+SpendWise is a personal finance web application that allows users to record,
 categorize, and monitor their daily expenses through a clean and responsive interface.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Frontend | React (Vite) |
-| Backend | Python, FastAPI |
-| Database | PostgreSQL |
-| ORM | SQLAlchemy + Alembic |
-| Version Control | Git + GitHub |
+| Layer           | Technology           |
+| --------------- | -------------------- |
+| Frontend        | React (Vite)         |
+| Backend         | Python, FastAPI      |
+| Database        | PostgreSQL           |
+| ORM             | SQLAlchemy + Alembic |
+| Version Control | Git + GitHub         |
 
 ---
 
