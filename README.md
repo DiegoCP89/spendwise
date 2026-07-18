@@ -46,4 +46,4 @@ categorize, and monitor their daily expenses through a clean and responsive inte
 
 ## 👨‍💻 Author
 
-Diego Cruz — [GitHub](https://github.com/DiegoCP89)
+Diego Cruz Pereira — [GitHub](https://github.com/DiegoCP89)
