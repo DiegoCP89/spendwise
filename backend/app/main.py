@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from app.database import engine, Base
+from app.models import category, expense  # add this line
 
 # Creates the FastAPI application instance
 app = FastAPI(
