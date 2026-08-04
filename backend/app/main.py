@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from app.database import engine, Base
-from app.models import category, expense  # add this line
+from app.models import category, expense
+from app.routers import categories, expenses
 
 # Creates the FastAPI application instance
 app = FastAPI(
@@ -11,6 +12,10 @@ app = FastAPI(
 
 # Creates all database tables automatically on startup
 Base.metadata.create_all(bind=engine)
+
+# Registers the categories router
+app.include_router(categories.router)
+app.include_router(expenses.router)  
 
 
 @app.get("/")
