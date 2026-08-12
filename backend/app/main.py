@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
 from app.models import category, expense
 from app.routers import categories, expenses
@@ -10,12 +11,21 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Allows the React frontend to access the API
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Creates all database tables automatically on startup
 Base.metadata.create_all(bind=engine)
 
-# Registers the categories router
+# Registers the routers
 app.include_router(categories.router)
-app.include_router(expenses.router)  
+app.include_router(expenses.router)
 
 
 @app.get("/")
