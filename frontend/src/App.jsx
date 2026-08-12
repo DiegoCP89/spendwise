@@ -37,6 +37,11 @@ function App() {
     fetchCategories();
   }, []);
 
+  function handleExpenseUpdated() {
+    setExpenseToEdit(null); // limpa o gasto em edição
+    fetchExpenses(); // atualiza a lista
+  }
+
   return (
     <div>
       <h1>SpendWise</h1>
@@ -50,7 +55,7 @@ function App() {
       <ExpenseSummary expenses={expenses} />
       <ExpenseForm
         categories={categories}
-        onExpenseCreated={fetchExpenses}
+        onExpenseCreated={handleExpenseUpdated}
         expenseToEdit={expenseToEdit}
       />
     </div>
