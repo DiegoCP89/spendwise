@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.database import engine, Base
-from app.models import category, expense
+from app.models import category, expense, user
 from app.routers import categories, expenses
+from app.routers import auth as auth_router
 
 # Creates the FastAPI application instance
 app = FastAPI(
@@ -26,6 +27,7 @@ Base.metadata.create_all(bind=engine)
 # Registers the routers
 app.include_router(categories.router)
 app.include_router(expenses.router)
+app.include_router(auth_router.router)
 
 
 @app.get("/")

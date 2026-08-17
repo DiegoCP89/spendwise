@@ -4,6 +4,8 @@ from app.database import get_db
 from app.models.expense import Expense
 from app.models.category import Category
 from app.schemas.expense import ExpenseCreate, ExpenseUpdate, ExpenseResponse
+from app.models.user import User
+from app.auth.dependencies import get_authenticated_user
 
 # Groups all expense-related endpoints
 router = APIRouter(
@@ -13,9 +15,9 @@ router = APIRouter(
 
 
 @router.post("/", response_model=ExpenseResponse, status_code=status.HTTP_201_CREATED)
-def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
+def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db), current_user: User = Depends(get_authenticated_user)):
     # Checks if the category exists
-    category = db.query(Category).filter(Category.id == expense.category_id).first()
+    category = db.query(Category).filter(Category.id == expense.category_id, Category.user_id == current_user.id).first()
     if not category:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -27,25 +29,30 @@ def create_expense(expense: ExpenseCreate, db: Session = Depends(get_db)):
         description=expense.description,
         amount=expense.amount,
         date=expense.date,
-        category_id=expense.category_id
+        category_id=expense.category_id, 
+        user_id=current_user.id
     )
 
     db.add(new_expense)
     db.commit()
     db.refresh(new_expense)
+
     return new_expense
 
 
 @router.get("/", response_model=list[ExpenseResponse])
-def list_expenses(db: Session = Depends(get_db)):
+def list_expenses(db: Session = Depends(get_db), current_user: User = Depends(get_authenticated_user)):
     # Returns all expenses from the database
-    return db.query(Expense).all()
+    return db.query(Expense).filter(Expense.user_id == current_user.id).all()
 
 
 @router.put("/{expense_id}", response_model=ExpenseResponse)
-def update_expense(expense_id: int, expense: ExpenseUpdate, db: Session = Depends(get_db)):
+def update_expense(expense_id: int, expense: ExpenseUpdate, db: Session = Depends(get_db), current_user: User = Depends(get_authenticated_user)):
     # Checks if the expense exists
-    db_expense = db.query(Expense).filter(Expense.id == expense_id).first()
+    db_expense = db.query(Expense).filter(
+    Expense.id == expense_id,
+    Expense.user_id == current_user.id
+).first()
     if not db_expense:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -64,13 +71,17 @@ def update_expense(expense_id: int, expense: ExpenseUpdate, db: Session = Depend
 
     db.commit()
     db.refresh(db_expense)
+
     return db_expense
 
 
 @router.delete("/{expense_id}", status_code=status.HTTP_204_NO_CONTENT)
-def delete_expense(expense_id: int, db: Session = Depends(get_db)):
+def delete_expense(expense_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_authenticated_user)):
     # Checks if the expense exists
-    db_expense = db.query(Expense).filter(Expense.id == expense_id).first()
+    db_expense = db.query(Expense).filter(
+        Expense.id == expense_id,
+        Expense.user_id == current_user.id
+    ).first()
     if not db_expense:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
