@@ -3,14 +3,17 @@ import axios from "axios";
 import ExpenseList from "./components/ExpenseList";
 import ExpenseSummary from "./components/ExpenseSummary";
 import ExpenseForm from "./components/ExpenseForm";
+import Login from "./components/Login";
+import Register from "./components/Register";
 
 const API_URL = "http://localhost:8000";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
-  // State — guarda qual gasto está sendo editado
   const [expenseToEdit, setExpenseToEdit] = useState(null);
+  const [token, setToken] = useState(null);
+  const [showRegister, setShowRegister] = useState(false);
 
   async function fetchExpenses() {
     const response = await axios.get(`${API_URL}/expenses/`);
@@ -27,9 +30,27 @@ function App() {
     fetchExpenses();
   }
 
-  // Função — recebe o gasto completo e salva no state
   function handleEditExpense(expense) {
     setExpenseToEdit(expense);
+  }
+
+  function handleExpenseUpdated() {
+    setExpenseToEdit(null);
+    fetchExpenses();
+  }
+
+  function handleLogin(receivedToken) {
+    setToken(receivedToken);
+    // Configures axios to send token automatically in all requests
+    axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
+    fetchExpenses();
+    fetchCategories();
+  }
+
+  function handleLogout() {
+    setToken(null);
+    // Removes the token from axios headers
+    delete axios.defaults.headers.common["Authorization"];
   }
 
   useEffect(() => {
@@ -37,14 +58,24 @@ function App() {
     fetchCategories();
   }, []);
 
-  function handleExpenseUpdated() {
-    setExpenseToEdit(null); // limpa o gasto em edição
-    fetchExpenses(); // atualiza a lista
+  // Shows register or login screen when not authenticated
+  if (!token) {
+    if (showRegister) {
+      return <Register onShowLogin={() => setShowRegister(false)} />;
+    }
+    return (
+      <Login
+        onLogin={handleLogin}
+        onShowRegister={() => setShowRegister(true)}
+      />
+    );
   }
 
+  // Shows dashboard when authenticated
   return (
     <div>
       <h1>SpendWise</h1>
+      <button onClick={handleLogout}>Logout</button>
       <h2>Expenses</h2>
       <ExpenseList
         expenses={expenses}
