@@ -20,22 +20,52 @@ const Login = ({ onLogin, onShowRegister }) => {
 
   // 3. return com formulário aqui
   return (
-    <div>
-      <h2>Login</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={onShowRegister}>Create Account</button>
+    <div className="auth-page">
+      <div className="auth-logo">
+        <span>💼</span>
+        <span>SpendWise</span>
+      </div>
+
+      <div className="auth-card">
+        <h2 className="auth-title">Login</h2>
+
+        <div className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              className="form-input"
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="btn btn-primary"
+            style={{ width: "100%" }}
+            onClick={handleLogin}
+          >
+            Login
+          </button>
+        </div>
+
+        <div className="auth-footer">
+          <span>Don't have an account? </span>
+          <button onClick={onShowRegister}>Create Account</button>
+        </div>
+      </div>
     </div>
   );
 };

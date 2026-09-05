@@ -20,32 +20,63 @@ const Register = ({ onShowLogin }) => {
   }
 
   return (
-    <div>
-      <h2>Create Account</h2>
+    <div className="auth-page">
+      <div className="auth-logo">
+        <span>💼</span>
+        <span>SpendWise</span>
+      </div>
 
-      <input
-        type="text"
-        placeholder="Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
+      <div className="auth-card">
+        <h2 className="auth-title">Create Account</h2>
 
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <div className="auth-form">
+          <div className="form-group">
+            <label className="form-label">Name</label>
+            <input
+              className="form-input"
+              type="text"
+              placeholder="Your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input
+              className="form-input"
+              type="email"
+              placeholder="email@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
 
-      <button onClick={handleRegister}>Register</button>
-      <button onClick={onShowLogin}>Back to Login</button>
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input
+              className="form-input"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            className="btn btn-primary"
+            style={{ width: "100%" }}
+            onClick={handleRegister}
+          >
+            Register
+          </button>
+        </div>
+
+        <div className="auth-footer">
+          <span>Already have an account? </span>
+          <button onClick={onShowLogin}>Back to Login</button>
+        </div>
+      </div>
     </div>
   );
 };

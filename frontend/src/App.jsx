@@ -5,6 +5,7 @@ import ExpenseSummary from "./components/ExpenseSummary";
 import ExpenseForm from "./components/ExpenseForm";
 import Login from "./components/Login";
 import Register from "./components/Register";
+import ConfirmModal from "./components/ConfirmModal";
 
 const API_URL = "http://localhost:8000";
 
@@ -14,6 +15,7 @@ function App() {
   const [expenseToEdit, setExpenseToEdit] = useState(null);
   const [token, setToken] = useState(null);
   const [showRegister, setShowRegister] = useState(false);
+  const [modalConfig, setModalConfig] = useState(null);
 
   async function fetchExpenses() {
     const response = await axios.get(`${API_URL}/expenses/`);
@@ -25,9 +27,27 @@ function App() {
     setCategories(response.data);
   }
 
-  async function handleDeleteExpense(id) {
-    await axios.delete(`${API_URL}/expenses/${id}/`);
-    fetchExpenses();
+  function handleDeleteClick(id) {
+    setModalConfig({
+      message:
+        "Are you sure you want to delete this expense? This action cannot be undone.",
+      onConfirm: async () => {
+        await axios.delete(`${API_URL}/expenses/${id}/`);
+        fetchExpenses();
+        setModalConfig(null);
+      },
+    });
+  }
+
+  function handleLogoutClick() {
+    setModalConfig({
+      message: "Are you sure you want to logout?",
+      onConfirm: () => {
+        setToken(null);
+        delete axios.defaults.headers.common["Authorization"];
+        setModalConfig(null);
+      },
+    });
   }
 
   function handleEditExpense(expense) {
@@ -41,16 +61,9 @@ function App() {
 
   function handleLogin(receivedToken) {
     setToken(receivedToken);
-    // Configures axios to send token automatically in all requests
     axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
     fetchExpenses();
     fetchCategories();
-  }
-
-  function handleLogout() {
-    setToken(null);
-    // Removes the token from axios headers
-    delete axios.defaults.headers.common["Authorization"];
   }
 
   useEffect(() => {
@@ -58,7 +71,6 @@ function App() {
     fetchCategories();
   }, []);
 
-  // Shows register or login screen when not authenticated
   if (!token) {
     if (showRegister) {
       return <Register onShowLogin={() => setShowRegister(false)} />;
@@ -71,25 +83,41 @@ function App() {
     );
   }
 
-  // Shows dashboard when authenticated
   return (
-    <div>
-      <h1>SpendWise</h1>
-      <button onClick={handleLogout}>Logout</button>
-      <h2>Expenses</h2>
-      <ExpenseList
-        expenses={expenses}
-        categories={categories}
-        onDelete={handleDeleteExpense}
-        onEdit={handleEditExpense}
-      />
-      <ExpenseSummary expenses={expenses} />
-      <ExpenseForm
-        categories={categories}
-        onExpenseCreated={handleExpenseUpdated}
-        expenseToEdit={expenseToEdit}
-      />
-    </div>
+    <>
+      {modalConfig && (
+        <ConfirmModal
+          message={modalConfig.message}
+          onConfirm={modalConfig.onConfirm}
+          onCancel={() => setModalConfig(null)}
+        />
+      )}
+
+      <div className="header">
+        <div className="header-logo">
+          <div className="logo-icon">$</div>
+          <span>SpendWise</span>
+        </div>
+        <button className="btn btn-secondary" onClick={handleLogoutClick}>
+          Logout
+        </button>
+      </div>
+
+      <div className="main-container">
+        <ExpenseSummary expenses={expenses} />
+        <ExpenseList
+          expenses={expenses}
+          categories={categories}
+          onDelete={handleDeleteClick}
+          onEdit={handleEditExpense}
+        />
+        <ExpenseForm
+          categories={categories}
+          onExpenseCreated={handleExpenseUpdated}
+          expenseToEdit={expenseToEdit}
+        />
+      </div>
+    </>
   );
 }
 

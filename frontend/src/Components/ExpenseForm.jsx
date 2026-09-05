@@ -50,41 +50,65 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
   }, [expenseToEdit]);
 
   return (
-    <div>
-      <h2>{expenseToEdit ? "Edit Expense" : "New Expense"}</h2>
-      <input
-        type="text"
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
+    <div className="card">
+      <h2 className="card-title">
+        {expenseToEdit ? "Edit Expense" : "New Expense"}
+      </h2>
+      <div className="form-grid">
+        <div className="form-group full-width">
+          <label className="form-label">Description</label>
+          <input
+            className="form-input"
+            type="text"
+            placeholder="Description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+          />
+        </div>
 
-      <input
-        type="number"
-        placeholder="Amount"
-        value={amount}
-        onChange={(e) => setAmount(e.target.value)}
-      />
+        <div className="form-group">
+          <label className="form-label">Amount</label>
+          <input
+            className="form-input"
+            type="number"
+            placeholder="0.00"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+          />
+        </div>
 
-      <input
-        type="date"
-        value={date}
-        onChange={(e) => setDate(e.target.value)}
-      />
+        <div className="form-group">
+          <label className="form-label">Date</label>
+          <input
+            className="form-input"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
+        </div>
 
-      <select
-        value={categoryId}
-        onChange={(e) => setCategoryId(e.target.value)}
-      >
-        <option value="">Select a category</option>
-        {categories.map((category) => (
-          <option key={category.id} value={category.id}>
-            {category.name}
-          </option>
-        ))}
-      </select>
+        <div className="form-group full-width">
+          <label className="form-label">Category</label>
+          <select
+            className="form-select"
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+          >
+            <option value="">Select a category</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <button onClick={handleSubmit}>Save</button>
+        <div className="form-actions">
+          <button className="btn btn-primary" onClick={handleSubmit}>
+            Save
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
