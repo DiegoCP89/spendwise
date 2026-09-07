@@ -16,6 +16,11 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
       setErrorMessage("All fields are required.");
       return;
     }
+    // Validates that amount is positive
+    if (parseFloat(amount) <= 0) {
+      setErrorMessage("Amount must be greater than zero.");
+      return;
+    }
 
     setErrorMessage("");
     if (expenseToEdit) {
