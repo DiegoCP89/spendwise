@@ -8,8 +8,16 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
   const [amount, setAmount] = useState("");
   const [date, setDate] = useState("");
   const [categoryId, setCategoryId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleSubmit() {
+    // Validates required fields before sending to API
+    if (!description || !amount || !date || !categoryId) {
+      setErrorMessage("All fields are required.");
+      return;
+    }
+
+    setErrorMessage("");
     if (expenseToEdit) {
       // modo edição — chama PUT
       await axios.put(`${API_URL}/expenses/${expenseToEdit.id}/`, {
@@ -72,6 +80,8 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
             className="form-input"
             type="number"
             placeholder="0.00"
+            min="0"
+            step="0.01"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
@@ -102,6 +112,8 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
             ))}
           </select>
         </div>
+
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
 
         <div className="form-actions">
           <button className="btn btn-primary" onClick={handleSubmit}>

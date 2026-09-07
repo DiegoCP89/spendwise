@@ -404,3 +404,9 @@ body {
   color: var(--green-dark);
   flex-shrink: 0;
 }
+
+.error-message {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}

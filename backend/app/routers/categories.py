@@ -39,3 +39,37 @@ def create_category(category: CategoryCreate, db: Session = Depends(get_db), cur
 def list_categories(db: Session = Depends(get_db), current_user: User = Depends(get_authenticated_user)):
     # Returns all categories from the database
     return db.query(Category).filter(Category.user_id == current_user.id).all()
+
+
+@router.delete("/{category_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_category(
+    category_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_authenticated_user)
+):
+    # Checks if category exists and belongs to current user
+    category = db.query(Category).filter(
+        Category.id == category_id,
+        Category.user_id == current_user.id
+    ).first()
+
+    if not category:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Category not found"
+        )
+
+    # Checks if category has expenses linked to it
+    from app.models.expense import Expense
+    has_expenses = db.query(Expense).filter(
+        Expense.category_id == category_id
+    ).first()
+
+    if has_expenses:
+        raise HTTPException(
+            status_code=status.HTTP_409_CONFLICT,
+            detail="Cannot delete category with existing expenses"
+        )
+
+    db.delete(category)
+    db.commit()

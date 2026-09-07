@@ -6,6 +6,8 @@ import ExpenseForm from "./components/ExpenseForm";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import ConfirmModal from "./components/ConfirmModal";
+import CategoryForm from "./components/CategoryForm";
+import CategoryList from "./components/CategoryList";
 
 const API_URL = "http://localhost:8000";
 
@@ -66,6 +68,27 @@ function App() {
     fetchCategories();
   }
 
+  function handleCategoryCreated() {
+    fetchCategories();
+  }
+
+  function handleDeleteCategory(id) {
+    setModalConfig({
+      message:
+        "Are you sure you want to delete this category? This action cannot be undone.",
+      onConfirm: async () => {
+        try {
+          await axios.delete(`${API_URL}/categories/${id}/`);
+          fetchCategories();
+        } catch (error) {
+          // 409 = category has expenses linked
+          alert(error.response?.data?.detail || "Could not delete category.");
+        }
+        setModalConfig(null);
+      },
+    });
+  }
+
   useEffect(() => {
     fetchExpenses();
     fetchCategories();
@@ -116,6 +139,8 @@ function App() {
           onExpenseCreated={handleExpenseUpdated}
           expenseToEdit={expenseToEdit}
         />
+        <CategoryForm onCategoryCreated={handleCategoryCreated} />{" "}
+        <CategoryList categories={categories} onDelete={handleDeleteCategory} />
       </div>
     </>
   );

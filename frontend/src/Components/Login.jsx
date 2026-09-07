@@ -4,25 +4,27 @@ import axios from "axios";
 const API_URL = "http://localhost:8000";
 
 const Login = ({ onLogin, onShowRegister }) => {
-  // 1. states aqui
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
-  // 2. função handleLogin aqui
   async function handleLogin() {
     const formData = new FormData();
     formData.append("username", email);
     formData.append("password", password);
 
-    const response = await axios.post(`${API_URL}/auth/login`, formData);
-    onLogin(response.data.access_token);
+    try {
+      const response = await axios.post(`${API_URL}/auth/login`, formData);
+      onLogin(response.data.access_token);
+    } catch (error) {
+      setErrorMessage(error.response?.data?.detail || "Login failed.");
+    }
   }
 
-  // 3. return com formulário aqui
   return (
     <div className="auth-page">
       <div className="auth-logo">
-        <span>💼</span>
+        <div className="logo-icon">$</div>
         <span>SpendWise</span>
       </div>
 
@@ -51,6 +53,8 @@ const Login = ({ onLogin, onShowRegister }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
           <button
             className="btn btn-primary"

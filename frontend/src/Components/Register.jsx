@@ -7,22 +7,25 @@ const Register = ({ onShowLogin }) => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
 
   async function handleRegister() {
-    await axios.post(`${API_URL}/auth/register`, {
-      name: name,
-      email: email,
-      password: password,
-    });
-
-    // After registration, go back to login screen
-    onShowLogin();
+    try {
+      await axios.post(`${API_URL}/auth/register`, {
+        name: name,
+        email: email,
+        password: password,
+      });
+      onShowLogin();
+    } catch (error) {
+      setErrorMessage(error.response?.data?.detail || "Registration failed.");
+    }
   }
 
   return (
     <div className="auth-page">
       <div className="auth-logo">
-        <span>💼</span>
+        <div className="logo-icon">$</div>
         <span>SpendWise</span>
       </div>
 
@@ -62,6 +65,8 @@ const Register = ({ onShowLogin }) => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
+
+          {errorMessage && <p className="error-message">{errorMessage}</p>}
 
           <button
             className="btn btn-primary"
