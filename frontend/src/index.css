@@ -410,3 +410,35 @@ body {
   font-size: 0.8rem;
   margin-top: 0.25rem;
 }
+
+/* ===== RESPONSIVIDADE MOBILE ===== */
+@media (max-width: 600px) {
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-group.full-width {
+    grid-column: 1;
+  }
+
+  .main-container {
+    padding: 0 0.75rem;
+    margin: 1rem auto;
+  }
+
+  .expense-item {
+    grid-template-columns: 1fr;
+  }
+
+  .expense-amount {
+    text-align: left;
+  }
+
+  .summary-value {
+    font-size: 1.6rem;
+  }
+
+  .auth-card {
+    padding: 1.5rem;
+  }
+}
