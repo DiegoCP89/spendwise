@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date as Date, datetime
 from decimal import Decimal
 from typing import Optional
@@ -18,12 +18,11 @@ class ExpenseUpdate(BaseModel):
     category_id: Optional[int] = None
 
 class ExpenseResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
     id: int
     description: str
     amount: Decimal
     date: Date
     category_id: int
     created_at: datetime
-
-    class Config:
-        from_attributes = True

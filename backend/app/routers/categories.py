@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from app.database import get_db
 from app.models.category import Category
+from app.models.expense import Expense
 from app.schemas.category import CategoryCreate, CategoryResponse
 from app.models.user import User
 from app.auth.dependencies import get_authenticated_user
@@ -60,7 +61,6 @@ def delete_category(
         )
 
     # Checks if category has expenses linked to it
-    from app.models.expense import Expense
     has_expenses = db.query(Expense).filter(
         Expense.category_id == category_id
     ).first()

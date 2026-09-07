@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 import os
@@ -10,13 +10,14 @@ load_dotenv()
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Creates the connection engine with the database
-engine = create_engine(DATABASE_URL)
+engine = create_engine(DATABASE_URL) 
 
 # Each request to the database will use a session
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Base class for the database models
-Base = declarative_base()
+class Base(DeclarativeBase):
+    pass
 
 
 # Dependency: opens and closes the database session automatically

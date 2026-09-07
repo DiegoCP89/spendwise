@@ -9,7 +9,7 @@ import ConfirmModal from "./components/ConfirmModal";
 import CategoryForm from "./components/CategoryForm";
 import CategoryList from "./components/CategoryList";
 
-const API_URL = "http://localhost:8000";
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8000";
 
 function App() {
   const [expenses, setExpenses] = useState([]);
