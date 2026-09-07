@@ -17,8 +17,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5173",
-        "https://spendwise.vercel.app",
-        "ttps://spendwise-pi.vercel.app",
+        "https://spendwise-lime-two.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
