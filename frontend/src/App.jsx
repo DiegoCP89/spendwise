@@ -15,7 +15,7 @@ function App() {
   const [expenses, setExpenses] = useState([]);
   const [categories, setCategories] = useState([]);
   const [expenseToEdit, setExpenseToEdit] = useState(null);
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState(localStorage.getItem("spendwise_token"));
   const [showRegister, setShowRegister] = useState(false);
   const [modalConfig, setModalConfig] = useState(null);
 
@@ -46,6 +46,7 @@ function App() {
       message: "Are you sure you want to logout?",
       onConfirm: () => {
         setToken(null);
+        localStorage.removeItem("spendwise_token");
         delete axios.defaults.headers.common["Authorization"];
         setModalConfig(null);
       },
@@ -63,6 +64,7 @@ function App() {
 
   function handleLogin(receivedToken) {
     setToken(receivedToken);
+    localStorage.setItem("spendwise_token", receivedToken);
     axios.defaults.headers.common["Authorization"] = `Bearer ${receivedToken}`;
     fetchExpenses();
     fetchCategories();
@@ -81,7 +83,6 @@ function App() {
           await axios.delete(`${API_URL}/categories/${id}/`);
           fetchCategories();
         } catch (error) {
-          // 409 = category has expenses linked
           alert(error.response?.data?.detail || "Could not delete category.");
         }
         setModalConfig(null);
@@ -90,6 +91,10 @@ function App() {
   }
 
   useEffect(() => {
+    const savedToken = localStorage.getItem("spendwise_token");
+    if (savedToken) {
+      axios.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
+    }
     fetchExpenses();
     fetchCategories();
   }, []);
@@ -140,7 +145,7 @@ function App() {
           expenseToEdit={expenseToEdit}
         />
         <CategoryList categories={categories} onDelete={handleDeleteCategory} />
-        <CategoryForm onCategoryCreated={handleCategoryCreated} />{" "}
+        <CategoryForm onCategoryCreated={handleCategoryCreated} />
       </div>
     </>
   );
