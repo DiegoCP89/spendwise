@@ -75,7 +75,7 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Amount</label>
+          <label className="form-label">Amount (USD)</label>
           <input
             className="form-input"
             type="number"
@@ -92,6 +92,7 @@ const ExpenseForm = ({ categories, onExpenseCreated, expenseToEdit }) => {
           <input
             className="form-input"
             type="date"
+            max={new Date().toISOString().split("T")[0]}
             value={date}
             onChange={(e) => setDate(e.target.value)}
           />
