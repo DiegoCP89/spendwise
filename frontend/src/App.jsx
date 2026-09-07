@@ -139,8 +139,8 @@ function App() {
           onExpenseCreated={handleExpenseUpdated}
           expenseToEdit={expenseToEdit}
         />
-        <CategoryForm onCategoryCreated={handleCategoryCreated} />{" "}
         <CategoryList categories={categories} onDelete={handleDeleteCategory} />
+        <CategoryForm onCategoryCreated={handleCategoryCreated} />{" "}
       </div>
     </>
   );
